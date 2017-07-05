@@ -15,3 +15,5 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0
 
 // Adds additional packages into conf/routes
 // play.sbt.routes.RoutesKeys.routesImport += "com.ada.binders._"
+
+coverageExcludedPackages := "<empty>;Reverse.*;router.Routes;router.RoutesPrefix"
