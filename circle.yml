@@ -7,11 +7,19 @@ machine:
 dependencies:
   pre:
     - sbt about
-    - sbt update
   cache_directories:
     - "~/.ivy2"
     - "~/.sbt"
+  override:
+    - sbt update
+    - sbt coverage test:compile
 
 test:
   override:
-    - sbt test
+    - sbt coverage test
+    - sbt coverageReport
+  post:
+    - mkdir -p $CIRCLE_ARTIFACTS/scala-2.12
+    - mv target/scala-2.10/coverage-report  $CIRCLE_ARTIFACTS/scala-2.12/coverage-report
+    - mv target/scala-2.10/scoverage-report $CIRCLE_ARTIFACTS/scala-2.12/scoverage-report
+    - bash <(curl -s https://codecov.io/bash)
