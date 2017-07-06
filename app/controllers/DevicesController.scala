@@ -12,7 +12,7 @@ class DevicesController(cc: ControllerComponents) extends AbstractController(cc)
     val pos = Position(1, 1, 0)
     val sensLuz = Sensor("sensorId1", "Luz")
     val sensHum = Sensor("sensorId2", "Hum")
-    val device = Device("sensorId", "house1", pos, List(sensLuz, sensHum))
+    val device = Device("deviceId", "house1", pos, List(sensLuz, sensHum))
 
     Ok(Json.toJson(device)).as(JSON)
   }
