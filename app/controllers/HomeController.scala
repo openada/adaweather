@@ -1,9 +1,6 @@
 package controllers
 
-import model.{Device, Position, Sensor}
-import play.api.libs.json._
 import play.api.mvc._
-import model.Sensor._
 
 /**
   * This controller creates an `Action` to handle HTTP requests to the
@@ -20,14 +17,5 @@ class HomeController(cc: ControllerComponents) extends AbstractController(cc) {
     */
   def index() = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())
-  }
-
-  def test() = Action {
-    val pos = Position(1, 1, 0)
-    val sensLuz = Sensor("sensorId1", "Luz")
-    val sensHum = Sensor("sensorId2", "Hum")
-    val device = Device("sensorId", "house1", pos, List(sensLuz, sensHum))
-    
-    Ok(Json.toJson(device)).as(JSON)
   }
 }

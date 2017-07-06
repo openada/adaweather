@@ -3,8 +3,8 @@ package model
 import play.api.libs.json._
 
 
-case class Position(lat: Double, long: Double, alt: Double) {}
+case class Position(latitude: Double, longitude: Double, altitude: Double)
 
-object Position{
+object Position {
   implicit val positionWriter = Json.writes[Position]
 }
