@@ -1,7 +1,8 @@
 package controllers
 
+import boot.Boot
 import org.scalatestplus.play._
-import org.scalatestplus.play.guice._
+import play.api.{ApplicationLoader, Environment}
 import play.api.test._
 import play.api.test.Helpers._
 
@@ -11,7 +12,7 @@ import play.api.test.Helpers._
  *
  * For more information, see https://www.playframework.com/documentation/latest/ScalaTestingWithScalaTest
  */
-class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
+class HomeControllerSpec extends PlaySpec {
 
   "HomeController GET" should {
 
@@ -25,7 +26,7 @@ class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting
     }
 
     "render the index page from the application" in {
-      val controller = inject[HomeController]
+      val controller = new HomeController(stubControllerComponents())
       val home = controller.index().apply(FakeRequest(GET, "/"))
 
       status(home) mustBe OK
@@ -34,6 +35,8 @@ class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting
     }
 
     "render the index page from the router" in {
+      val context = ApplicationLoader.createContext(Environment.simple())
+      val app = new Boot().load(context)
       val request = FakeRequest(GET, "/")
       val home = route(app, request).get
 
