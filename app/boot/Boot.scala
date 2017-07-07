@@ -1,6 +1,6 @@
 package boot
 
-import controllers.HomeController
+import controllers.{DevicesController, HomeController}
 import play.api.ApplicationLoader.Context
 import play.api.{Application, ApplicationLoader, BuiltInComponentsFromContext}
 import play.filters.HttpFiltersComponents
@@ -18,5 +18,6 @@ class BootComponents(context: Context)
     with controllers.AssetsComponents {
 
   lazy val homeController = new HomeController(controllerComponents)
-  override lazy val router = new Routes(httpErrorHandler, homeController, assets)
+  lazy val devicesController = new DevicesController(controllerComponents)
+  override lazy val router = new Routes(httpErrorHandler, homeController, devicesController, assets)
 }
