@@ -4,12 +4,13 @@ import model.Sensor._
 import model.{Device, Position, Sensor}
 import play.api.libs.json._
 import play.api.mvc._
+import services.DataSource
 
 
-class DevicesController(cc: ControllerComponents) extends AbstractController(cc) {
+class DevicesController(cc: ControllerComponents, ds: DataSource) extends AbstractController(cc) {
 
   def getDevicesJson = Action {
-    Ok(Json.toJson(getDevices)).as(JSON)
+    Ok(Json.toJson( ds.devices)).as(JSON)
   }
 
   def getDevicesHtml = Action {
