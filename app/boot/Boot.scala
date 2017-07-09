@@ -1,6 +1,6 @@
 package boot
 
-import controllers.{DevicesController, HomeController}
+import controllers.DevicesController
 import play.api.ApplicationLoader.Context
 import play.api.db.slick.{DbName, DefaultSlickApi}
 import play.api.{Application, ApplicationLoader, BuiltInComponentsFromContext}
@@ -19,7 +19,6 @@ class BootComponents(context: Context)
   extends BuiltInComponentsFromContext(context)
     with HttpFiltersComponents
     with controllers.AssetsComponents {
-  //with HasDatabaseConfigProvider[JdbcProfile]{
 
   lazy val dataSource = new DataSource(dbConfig)
   lazy val devicesController = new DevicesController(controllerComponents, dataSource)
