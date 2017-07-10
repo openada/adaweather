@@ -24,8 +24,7 @@ class BootComponents(context: Context)
   lazy val devicesController = new DevicesController(controllerComponents, dataSource)
   override lazy val router = new Routes(httpErrorHandler, devicesController, assets)
   //TODO DO not use the default execution context for the db
-  val enviornment = application.environment
-  val slickApi = new DefaultSlickApi(enviornment, configuration, applicationLifecycle)
+  val slickApi = new DefaultSlickApi(environment, configuration, applicationLifecycle)
   val defaultDBName = DbName("devices")
   val dbConfig = slickApi.dbConfig[JdbcProfile](defaultDBName)
 }

@@ -8,12 +8,12 @@ import services.DataSource
 
 class DevicesController(cc: ControllerComponents, ds: DataSource) extends AbstractController(cc) {
 
-  def getDevices(extension: String) = Action {
-    val devices = ds.devices
 
-    extension match {
-      case "json" => Ok(Json.toJson(devices)).as(JSON)
-      case _ => Ok(views.html.devices(devices))
-    }
+  def getDevicesAsJson() = Action {
+    Ok(Json.toJson(ds.devices)).as(JSON)
+  }
+
+  def getDevicesAsHTML() = Action {
+    Ok(views.html.devices(ds.devices))
   }
 }

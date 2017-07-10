@@ -1,18 +1,19 @@
 package controllers
 
 import boot.Boot
+import mocks.DataSourceMock
 import org.scalatestplus.play._
-import play.api.{ApplicationLoader, Environment}
-import play.api.test._
 import play.api.test.Helpers._
+import play.api.test._
+import play.api.{ApplicationLoader, Environment}
 
-class DevicesControllerHtmlSpec extends PlaySpec {
+class DevicesControllerHtmlSpec extends PlaySpec with DataSourceMock {
 
   "DevicesController GET" should {
 
     "render the index page from a new instance of controller" in {
-      val controller = new DevicesController(stubControllerComponents())
-      val home = controller.getDevicesHtml.apply(FakeRequest(GET, "/"))
+      val controller = new DevicesController(stubControllerComponents(), dataSourceMock)
+      val home = controller.getDevicesAsHTML.apply(FakeRequest(GET, "/"))
 
       status(home) mustBe OK
       contentType(home) mustBe Some("text/html")
