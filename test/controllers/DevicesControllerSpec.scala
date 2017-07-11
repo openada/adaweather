@@ -1,16 +1,18 @@
 package controllers
 
+import mocks.DataSourceMock
 import org.scalatestplus.play._
 import play.api.test.Helpers._
 import play.api.test._
 
-class DevicesControllerSpec extends PlaySpec {
+class DevicesControllerSpec extends PlaySpec with DataSourceMock {
+
 
   "Devices Controller GET /devices" should {
 
     "show a mocked device" in {
-      val controller = new DevicesController(stubControllerComponents())
-      val devices = controller.getDevicesJson.apply(FakeRequest(GET, "/devices"))
+      val controller = new DevicesController(stubControllerComponents(), dataSourceMock)
+      val devices = controller.getDevicesAsJson.apply(FakeRequest(GET, "/devices"))
 
       status(devices) mustBe OK
       contentType(devices) mustBe Some(JSON)
