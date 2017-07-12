@@ -3,9 +3,8 @@ package model
 import play.api.libs.json.{Json, OWrites}
 
 
-case class Sensor(id: String, name: String)
+case class MetricValue(id: String, value: Double, timestamp: Long)
 
-object Sensor {
+object MetricValue {
   implicit val sensorWriter: OWrites[Sensor] = Json.writes[Sensor]
 }
-        
