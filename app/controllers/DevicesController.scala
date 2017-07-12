@@ -8,12 +8,11 @@ import services.DataSource
 
 class DevicesController(cc: ControllerComponents, ds: DataSource) extends AbstractController(cc) {
 
-
-  def getDevicesAsJson() = Action {
+  def getDevicesAsJson = Action {
     Ok(Json.toJson(ds.devices)).as(JSON)
   }
 
-  def getDevicesAsHTML() = Action {
+  def getDevicesAsHTML = Action {
     Ok(views.html.devices(ds.devices))
   }
 }

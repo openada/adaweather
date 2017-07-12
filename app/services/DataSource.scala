@@ -1,12 +1,21 @@
 package services
 
+import java.util.concurrent.ForkJoinPool
+
 import model.{Device, Position, Sensor}
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.ExecutionContext
 
-class DataSource(val dbConfig: DatabaseConfig[JdbcProfile])(implicit ec: ExecutionContext) {
+trait DataSource {
+  def devices: List[Device]
+  def executionContext: ExecutionContext
+}
+
+class DataSourceJdbc(val dbConfig: DatabaseConfig[JdbcProfile], paralelism: Int) extends DataSource {
+
+  override val executionContext: ExecutionContext = ExecutionContext.fromExecutorService(new ForkJoinPool(paralelism))
 
   def devices: List[Device] = {
     List(
