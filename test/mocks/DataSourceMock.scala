@@ -1,16 +1,20 @@
 package mocks
 
 import model.{Device, Position, Sensor}
-import org.mockito.Mockito.{mock, when}
 import services.DataSource
 
+import scala.concurrent.ExecutionContext
+
 /**
-  * Created by einevea on 10/07/2017.
+  * Provides different common mocks to inject on tests
   */
-trait DataSourceMock {
-  val dataSourceMock = mock[DataSource](classOf[DataSource])
-  when(dataSourceMock.devices).thenReturn(
-    List(
+object DataSourceMock {
+
+  val mockDevices = new DataSource {
+
+    override val executionContext: ExecutionContext = scala.concurrent.ExecutionContext.global
+
+    override def devices: List[Device] = List(
       Device(
         "001",
         "CaDani",
@@ -30,5 +34,6 @@ trait DataSourceMock {
         List(Sensor("sensorId1", "Luz"), Sensor("sensorId2", "Hum"))
       )
     )
-  )
+  }
+
 }

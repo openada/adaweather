@@ -6,7 +6,7 @@ import play.api.db.slick.{DbName, DefaultSlickApi}
 import play.api.{Application, ApplicationLoader, BuiltInComponentsFromContext}
 import play.filters.HttpFiltersComponents
 import router.Routes
-import services.DataSource
+import services.DataSourceJdbc
 import slick.jdbc.JdbcProfile
 
 class Boot extends ApplicationLoader {
@@ -20,11 +20,13 @@ class BootComponents(context: Context)
     with HttpFiltersComponents
     with controllers.AssetsComponents {
 
-  lazy val dataSource = new DataSource(dbConfig)
-  lazy val devicesController = new DevicesController(controllerComponents, dataSource)
+  private[this] val slickApi = new DefaultSlickApi(environment, configuration, applicationLifecycle)
+  private[this] val defaultDBName = DbName("devices")
+  private[this] val dbConfig = slickApi.dbConfig[JdbcProfile](defaultDBName)
+
+  // TODO put this into config
+  private[this] val dbPoolSize = 10
+  private[this] lazy val dataSource = new DataSourceJdbc(dbConfig, dbPoolSize)
+  private[this] lazy val devicesController = new DevicesController(controllerComponents, dataSource)
   override lazy val router = new Routes(httpErrorHandler, devicesController, assets)
-  //TODO DO not use the default execution context for the db
-  val slickApi = new DefaultSlickApi(environment, configuration, applicationLifecycle)
-  val defaultDBName = DbName("devices")
-  val dbConfig = slickApi.dbConfig[JdbcProfile](defaultDBName)
 }
