@@ -8,7 +8,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.12.2"
 
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0" % Test
-libraryDependencies += "org.mockito" % "mockito-core" % "2.8.47" % Test
 libraryDependencies += jdbc % Test
 
 //Database dependencies:

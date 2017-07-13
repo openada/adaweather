@@ -7,12 +7,12 @@ import play.api.test.Helpers._
 import play.api.test._
 import play.api.{ApplicationLoader, Environment}
 
-class DevicesControllerHtmlSpec extends PlaySpec with DataSourceMock {
+class DevicesControllerHtmlSpec extends PlaySpec {
 
   "DevicesController GET" should {
 
     "render the index page from a new instance of controller" in {
-      val controller = new DevicesController(stubControllerComponents(), dataSourceMock)
+      val controller = new DevicesController(stubControllerComponents(), DataSourceMock.mockDevices)
       val home = controller.getDevicesAsHTML.apply(FakeRequest(GET, "/"))
 
       status(home) mustBe OK
