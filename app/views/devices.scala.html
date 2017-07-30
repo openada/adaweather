@@ -34,24 +34,46 @@
       // create an array of markers based on a given "locations" array.
       // The map() method here has nothing to do with the Google Maps API.
       var markers = locations.map(function(location, i) {
-        return new google.maps.Marker({
+        var marker = new google.maps.Marker({
           position: location,
           label: labels[i % labels.length]
         });
+
+        var infowindow = new google.maps.InfoWindow({
+          content: content[i]
+        });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+
+        return marker
       });
 
       // Add a marker clusterer to manage the markers.
       var markerCluster = new MarkerClusterer(map, markers,
-              {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+        {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
     }
 
     var locations = @Html(
-    JsArray(
-      devices.map(device =>
-        Json.obj(("lat", JsNumber(device.position.latitude)), ("lng", JsNumber(device.position.longitude)))
-      )
-    ).toString
-  )
+      JsArray(
+        devices.map(device =>
+          Json.obj(("lat", JsNumber(device.position.latitude)), ("lng", JsNumber(device.position.longitude)))
+        )
+      ).toString
+    );
+
+    var content = @Html(
+      JsArray(
+        devices.map { device =>
+          val text = s"<h1>${device.name}</h1>" +
+          s"<span>Position: ${device.position.latitude}, ${device.position.longitude}</span>" +
+          "<p>Sensors:"+
+          device.sensors.map(_.name).mkString("<ul><li>", "</li><li>", "</li></ul>") +
+          "</p>"
+          JsString(text)
+        }
+      ).toString
+    );
   </script>
   <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
   </script>
