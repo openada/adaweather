@@ -3,25 +3,25 @@
 # --- !Ups
 
 CREATE TABLE devices (
-  id        BIGINT       NOT NULL AUTO_INCREMENT,
-  name      VARCHAR(255) NOT NULL,
-  latitude  FLOAT        NOT NULL,
-  longitude FLOAT        NOT NULL,
-  altitude  FLOAT        NOT NULL,
-  PRIMARY KEY (id)
+  ID        BIGINT       NOT NULL AUTO_INCREMENT,
+  NAME      VARCHAR(255) NOT NULL,
+  LATITUDE  FLOAT        NOT NULL,
+  LONGITUDE FLOAT        NOT NULL,
+  ALTITUDE  FLOAT        NOT NULL,
+  PRIMARY KEY (ID)
 );
 
 CREATE TABLE sensors (
-  id   BIGINT       NOT NULL AUTO_INCREMENT,
-  type VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id)
+  ID   BIGINT       NOT NULL AUTO_INCREMENT,
+  NAME VARCHAR(255) NOT NULL,
+  PRIMARY KEY (ID)
 );
 
 CREATE TABLE devices_sensors (
-  device_id BIGINT NOT NULL,
-  sensor_id BIGINT NOT NULL,
-  FOREIGN KEY (device_id) REFERENCES devices (id),
-  FOREIGN KEY (sensor_id) REFERENCES sensors (id)
+  DEVICE_ID BIGINT NOT NULL,
+  SENSOR_ID BIGINT NOT NULL,
+  FOREIGN KEY (DEVICE_ID) REFERENCES devices (ID),
+  FOREIGN KEY (SENSOR_ID) REFERENCES sensors (ID)
 );
 
 INSERT INTO sensors VALUES (0, 'Luz');
@@ -39,7 +39,6 @@ INSERT INTO devices_sensors VALUES (1, 1);
 INSERT INTO devices_sensors VALUES (2, 0);
 INSERT INTO devices_sensors VALUES (2, 1);
 INSERT INTO devices_sensors VALUES (3, 0);
-INSERT INTO devices_sensors VALUES (3, 1);
 INSERT INTO devices_sensors VALUES (3, 1);
 
 # --- !Downs

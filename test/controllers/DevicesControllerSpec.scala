@@ -15,7 +15,7 @@ class DevicesControllerSpec extends PlaySpec {
 
       status(devices) mustBe OK
       contentType(devices) mustBe Some(JSON)
-      contentAsString(devices) must include("\"id\":\"001\"")
+      contentAsString(devices) must include("\"id\":1")
     }
   }
 }
