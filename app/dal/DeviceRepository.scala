@@ -6,8 +6,8 @@ import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 import slick.lifted.{ForeignKeyQuery, MappedProjection, ProvenShape}
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.collection.immutable.Iterable
+import scala.concurrent.{ExecutionContext, Future}
 
 class DeviceRepository(dbConfig: DatabaseConfig[JdbcProfile])(implicit ec: ExecutionContext) {
 
@@ -47,6 +47,10 @@ class DeviceRepository(dbConfig: DatabaseConfig[JdbcProfile])(implicit ec: Execu
 
   private val sensor = TableQuery[SensorTable]
 
+  private val metricDeviceSensor = TableQuery[MetricValueTable]
+
+  private val deviceSensor = TableQuery[DeviceSensorTable]
+
   private class DeviceSensorTable(tag: Tag) extends Table[(Long, Long)](tag, "DEVICES_SENSORS") {
 
     def deviceId: Rep[Long] = column[Long]("DEVICE_ID", O.PrimaryKey)
@@ -56,10 +60,28 @@ class DeviceRepository(dbConfig: DatabaseConfig[JdbcProfile])(implicit ec: Execu
     def * : ProvenShape[(Long, Long)] = (deviceId, sensorId)
 
     def deviceFk: ForeignKeyQuery[DeviceTable, DeviceDb] = foreignKey("device_fk", deviceId, device)(_.id)
-    def sensonFk: ForeignKeyQuery[SensorTable, Sensor] = foreignKey("senson_fk", deviceId, sensor)(_.id)
+
+    def sensorFk: ForeignKeyQuery[SensorTable, Sensor] = foreignKey("sensor_fk", sensorId, sensor)(_.id)
   }
 
-  private val deviceSensor = TableQuery[DeviceSensorTable]
+  private class MetricValueTable(tag: Tag) extends Table[(Long, Long)](tag, "METRIC_VALUE") {
+
+    def id: Rep[Long] = column[Long]("ID", O.PrimaryKey, O.AutoInc)
+
+    def value: Rep[Long] = column[Long]("VALUE")
+
+    def timestamp: Rep[Long] = column[Long]("TIMESTAMP")
+
+    def * : ProvenShape[(Long, Long)] = (deviceId, sensorId)
+
+    def deviceId: Rep[Long] = column[Long]("DEVICE_ID", O.PrimaryKey)
+
+    def sensorId: Rep[Long] = column[Long]("SENSOR_ID", O.PrimaryKey)
+
+    def deviceFk: ForeignKeyQuery[DeviceTable, DeviceDb] = foreignKey("device_fk", deviceId, device)(_.id)
+
+    def sensorFk: ForeignKeyQuery[SensorTable, Sensor] = foreignKey("sensor_fk", sensorId, sensor)(_.id)
+  }
 
   // TODO I believe this can be simplified a lot and way more readable
   def findAll: Future[Iterable[Device]] = {

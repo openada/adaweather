@@ -17,6 +17,17 @@ CREATE TABLE sensors (
   PRIMARY KEY (ID)
 );
 
+CREATE TABLE metric_value (
+  ID   BIGINT       NOT NULL AUTO_INCREMENT,
+  DEVICE_ID BIGINT NOT NULL,
+  SENSOR_ID BIGINT NOT NULL,
+  VALUE DOUBLE NOT NULL,
+  date TIMESTAMP ,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (DEVICE_ID) REFERENCES devices (ID),
+  FOREIGN KEY (SENSOR_ID) REFERENCES sensors (ID)
+);
+
 CREATE TABLE devices_sensors (
   DEVICE_ID BIGINT NOT NULL,
   SENSOR_ID BIGINT NOT NULL,
@@ -41,8 +52,11 @@ INSERT INTO devices_sensors VALUES (2, 1);
 INSERT INTO devices_sensors VALUES (3, 0);
 INSERT INTO devices_sensors VALUES (3, 1);
 
+INSERT INTO metric_value VALUES (0, 0, 0, 0.99, 1501472252)
+
 # --- !Downs
 
+DROP TABLE metric_value;
 DROP TABLE devices_sensors;
 DROP TABLE devices;
 DROP TABLE sensors;
