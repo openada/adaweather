@@ -1,6 +1,7 @@
 package dal
 
 import model.db.DeviceDb
+import model.request.NewDevice
 import model.{Device, Position, Sensor}
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
@@ -70,9 +71,27 @@ class DeviceRepository(dbConfig: DatabaseConfig[JdbcProfile])(implicit ec: Execu
 
       query.result
     }.map(
-      _.groupBy(_._1) // Group by the device
-        .map { case (d, s) => Device(d, s.flatMap(_._2).toList)} // Get the right device based on the grouped sensors
+      _.groupBy { case (dev, _) => dev} // Group by the device
+        .map { case (d, s) =>
+          Device(d, s.flatMap { case (_, sens) => sens}.toList)
+      } // Get the right device based on the grouped sensors
     )
+  }
+
+  def findAllSensors: Future[Seq[Sensor]] = {
+    db.run(sensor.result)
+  }
+
+  def addDevice(newDevice: NewDevice): Future[DeviceDb] = {
+    val query =for {
+      deviceId <- (device returning device.map(_.id)) += DeviceDb(0, newDevice.name, Position(0,0,0))
+      _ <- deviceSensor ++= newDevice.sensorIds.map(sensorId => deviceId -> sensorId)
+    } yield deviceId
+
+    db.run(query.transactionally) map { deviceId =>
+      DeviceDb(deviceId, newDevice.name, Position(0,0,0))
+    }
+
   }
 
 }

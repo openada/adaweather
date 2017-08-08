@@ -5,12 +5,13 @@ import play.api.ApplicationLoader.Context
 import play.api.db.evolutions.EvolutionsComponents
 import play.api.db.slick.evolutions.SlickEvolutionsComponents
 import play.api.db.slick.{DbName, DefaultSlickApi}
+import play.api.mvc.EssentialFilter
 import play.api.{Application, ApplicationLoader, BuiltInComponentsFromContext}
-import play.filters.HttpFiltersComponents
+import play.filters.headers.SecurityHeadersComponents
+import play.filters.hosts.AllowedHostsComponents
 import router.Routes
-import services.DataSource
+import services.{DataSource, DataSourceJdbc}
 import slick.basic.DatabaseConfig
-import services.DataSourceJdbc
 import slick.jdbc.JdbcProfile
 
 class Boot extends ApplicationLoader {
@@ -23,10 +24,13 @@ class Boot extends ApplicationLoader {
 
 class BootComponents(context: Context)
   extends BuiltInComponentsFromContext(context)
-    with HttpFiltersComponents
+    with SecurityHeadersComponents
+    with AllowedHostsComponents
     with controllers.AssetsComponents
     with EvolutionsComponents
     with SlickEvolutionsComponents {
+
+  def httpFilters: Seq[EssentialFilter] = Seq(securityHeadersFilter, allowedHostsFilter)
 
   override def api: DefaultSlickApi = new DefaultSlickApi(environment, configuration, applicationLifecycle)
   private[this] val defaultDBName: DbName = DbName("devices")

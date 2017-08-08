@@ -17,6 +17,7 @@ test:
   override:
     - sbt coverage test
     - sbt coverageReport
+    - sbt coverageAggregate
   post:
     - mkdir -p $CIRCLE_ARTIFACTS/scala-2.12
     - mv target/scala-2.12/coverage-report  $CIRCLE_ARTIFACTS/scala-2.12/coverage-report

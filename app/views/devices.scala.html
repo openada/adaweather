@@ -1,6 +1,9 @@
 @import model.Device
+@import helper._
 @import play.api.libs.json._
-@(devices: Seq[Device])
+@import model.Sensor
+@import model.request.NewDevice
+@(devices: Seq[Device], sensors: Seq[Sensor], newDeviceForm: Form[NewDevice])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @main("Ada weather") {
   <style>
@@ -16,6 +19,14 @@
       padding: 0;
     }
   </style>
+
+  <div>
+    @helper.form(action = routes.DevicesController.addDevice()) {
+      @helper.inputText(newDeviceForm("name"))
+      @helper.select(newDeviceForm("deviceIds"), sensors.map(sensor => sensor.id.toString -> sensor.name), 'multiple -> ())
+      <button>Add Device</button>
+    }
+  </div>
   <div id="map"></div>
 
   <script>
