@@ -11,7 +11,7 @@ import scala.collection.immutable.Iterable
 import scala.concurrent.{ExecutionContext, Future}
 
 trait DataSource {
-  def devices: Future[Iterable[Device]]
+  def deviceRepository: DeviceRepository
   def executionContext: ExecutionContext
 }
 
@@ -20,8 +20,5 @@ class DataSourceJdbc(val dbConfig: DatabaseConfig[JdbcProfile], paralelism: Int)
   override implicit val executionContext: ExecutionContext = ExecutionContext.fromExecutorService(new ForkJoinPool(paralelism))
 
   val deviceRepository = new DeviceRepository(dbConfig)
-
-  override def devices: Future[Iterable[Device]] = deviceRepository.findAll
-
 }
 
